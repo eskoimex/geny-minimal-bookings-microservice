@@ -239,7 +239,7 @@ docker run -p 3000:3000 --env-file .env bookings-service
 - **Docker** – Containerized deployment
 - **Jest** – Testing framework
 
-## 📝 Assumptions & Decisions
+## 📝 Assumptions & Decisions & Improvements with +4 Hours
 
 ### Assumptions
 
@@ -268,3 +268,23 @@ docker run -p 3000:3000 --env-file .env bookings-service
 - Provided multi-stage Dockerfile to keep production images small.
 
 - Added E2E test bypass to speed up test runs and avoid Redis/queue dependencies in CI.
+
+
+## ⏳ What You’d Improve with +4 Hours
+
+If given more time, I would:
+
+- Implement full authentication & authorization for booking actions, with role-based access control.
+
+- Add filtering to GET /bookings for large datasets.
+
+- Enhance validation & error handling with custom exceptions and standardized API error responses.
+
+- Introduce booking conflict checks (e.g., preventing overlapping times for the same user).
+
+- Add integration tests with real Redis and PostgreSQL in CI.
+
+- Improve logging & monitoring using tools like Winston + Prometheus metrics.
+
+- Implement booking reminders as scheduled BullMQ jobs with email/SMS notifications.
+
