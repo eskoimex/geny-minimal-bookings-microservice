@@ -232,7 +232,7 @@ docker run -p 3000:3000 --env-file .env bookings-service
 
 ## 🧪 Testing
 - **Unit tests** for services and repositories
-- **E2E tests** for API endpoints
+- **E2E tests** for all API endpoints
 
 ---
 
