@@ -270,7 +270,7 @@ docker run -p 3000:3000 --env-file .env bookings-service
 - Added E2E test bypass to speed up test runs and avoid Redis/queue dependencies in CI.
 
 
-## ⏳ What You’d Improve with +4 Hours
+## ⏳ What I’d Improve with +4 Hours
 
 If given more time, I would:
 
