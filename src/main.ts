@@ -35,7 +35,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
     const config = new DocumentBuilder()
-    .setTitle('Bookings Service')
+    .setTitle('Bookings Micro-Service')
     .setDescription('API docs for the Bookings microservice')
     .setVersion('1.0.0')
     .addBearerAuth()
