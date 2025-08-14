@@ -1,0 +1,40 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role     @default(PROVIDER)
+  bookings  Booking[]
+  createdAt DateTime @default(now())
+}
+
+model Booking {
+  id         Int      @id @default(autoincrement())
+  title      String
+  providerId Int
+  provider   User     @relation(fields: [providerId], references: [id])
+  startAt    DateTime
+  endAt      DateTime
+  status     BookingStatus @default(PENDING)
+  createdAt  DateTime @default(now())
+}
+
+enum Role { 
+  ADMIN 
+  PROVIDER 
+}
+
+enum BookingStatus { 
+  PENDING 
+  CONFIRMED 
+  CANCELLED 
+  }
