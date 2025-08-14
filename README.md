@@ -104,13 +104,9 @@ npx prisma migrate dev
 
 Example queue processor:
 ```ts
-// @Processor('bookingQueue')
-// export class BookingProcessor {
-//   @Process('sendConfirmationEmail')
-//   async handleJob(job: Job) {
-//     console.log('Sending confirmation email:', job.data);
-//   }
-// }
+import { Injectable } from '@nestjs/common';
+import { Queue } from 'bullmq';
+import { Redis } from 'ioredis';
  this.logger.log("Initializing reminders worker...");   
     const connection = new IORedis(
       process.env.REDIS_URL || "redis://redis:6379",
@@ -124,18 +120,6 @@ Example queue processor:
 - Socket.IO with Redis adapter for scalable real-time events
 - Configured to support multiple instances across distributed systems
 
-Example setup:
-```ts
-import { createAdapter } from '@socket.io/redis-adapter';
-import { createClient } from 'redis';
-
-const pubClient = createClient({ url: process.env.REDIS_URL });
-const subClient = pubClient.duplicate();
-
-io.adapter(createAdapter(pubClient, subClient));
-```
-
----
 
 ### 5. Multi-Stage Dockerfile
 - **Stage 1**: Build dependencies
@@ -221,11 +205,11 @@ docker run -p 3000:3000 --env-file .env bookings-service
 ## 📚 API Endpoints
 
 ### Bookings
-| Method | Endpoint         | Description        |
-|--------|------------------|--------------------|
-| POST   | /bookings        | Create a booking   |
+| Method | Endpoint         | Description                     |
+|--------|------------------|---------------------------------|
+| POST   | /bookings        | Create a booking                |
 | GET    | /bookings        | List bookings (Upcoming/Past)   |
-| GET    | /bookings/:id    | Get booking by ID  |
+| GET    | /bookings/:id    | Get booking by ID               |
 
 
 ---
