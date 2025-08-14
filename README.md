@@ -152,6 +152,11 @@ cd dir
 npm install
 ```
 
+### Redis Installation Using Docker
+```bash
+docker run --name redis -p 6379:6379 -d redis
+```
+
 ### Environment Variables
 Create a `.env` file in the project root:
 ```
@@ -184,6 +189,11 @@ npm run test:e2e
 ```bash
 npm run build
 npm run start:prod
+```
+
+### Swagger API Endpoints Documentation
+```bash
+http://localhost:3000/api/docs
 ```
 
 ---

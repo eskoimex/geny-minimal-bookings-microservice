@@ -41,7 +41,30 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+
+
+  // Add manual /metrics definition
+  document.paths['/metrics'] = {
+    get: {
+      summary: 'Prometheus metrics endpoint',
+      description:
+        'Returns the application metrics in Prometheus exposition format.',
+      responses: {
+        200: {
+          description: 'OK',
+          content: {
+            'text/plain': {
+              schema: {
+                type: 'string',
+                example: '# HELP http_requests_total The total number of HTTP requests\nhttp_requests_total{method="get",code="200"} 1027\n',
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+  SwaggerModule.setup('api/docs', app, document);
 
   // configure socket.io redis adapter (best-effort)
   await configureRedisAdapter(app);
