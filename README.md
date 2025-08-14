@@ -239,3 +239,32 @@ docker run -p 3000:3000 --env-file .env bookings-service
 - **Docker** – Containerized deployment
 - **Jest** – Testing framework
 
+## 📝 Assumptions & Decisions
+
+### Assumptions
+
+- The service will run in an environment with PostgreSQL and Redis available (either locally or in containers).
+
+- Bookings data model is minimal for the scope of this task: ID, title, date/time, and optional metadata.
+
+- Redis is used both for BullMQ job queues and Socket.IO scaling.
+
+- Local development may run everything in Docker Compose without requiring extra setup.
+
+- JWT authentication is assumed for securing booking endpoints, but minimal auth implementation is included.
+
+### Decisions
+
+- NestJS chosen for its modular architecture, DI system, and testing support.
+
+- Prisma ORM selected for type-safe database queries and schema migration management.
+
+- Implemented repository pattern for data access separation and testability.
+
+- Added BullMQ to simulate async booking notifications/reminders.
+
+- Socket.IO with Redis adapter to allow future scaling to multiple instances.
+
+- Provided multi-stage Dockerfile to keep production images small.
+
+- Added E2E test bypass to speed up test runs and avoid Redis/queue dependencies in CI.
