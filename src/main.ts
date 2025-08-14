@@ -4,6 +4,31 @@ import { ValidationPipe } from '@nestjs/common';
 import * as client from 'prom-client';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import * as Redis from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
+import { INestApplication } from '@nestjs/common';
+
+async function configureRedisAdapter(app: INestApplication) {
+  try {
+    const url = process.env.REDIS_URL;
+    const pubClient = Redis.createClient(url as any);
+    const subClient = Redis.createClient(url as any);
+    pubClient.on('error', (err) => console.error('Redis pubClient error:', err));
+    subClient.on('error', (err) => console.error('Redis subClient error:', err));
+    // Connect clients (v3.x connects automatically, but you can call .on('ready'))
+    if ((app as any).getIoAdapter) {
+      // @ts-ignore
+      const ioAdapter = (app as any).getIoAdapter();
+      const server = ioAdapter?.getServer();
+      if (server && server.adapter) {
+        server.adapter(createAdapter(pubClient, subClient));
+      }
+    }
+  } catch (e) {
+    console.warn('Could not configure Redis adapter for socket.io', e);
+  }
+}
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +42,9 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
+
+  // configure socket.io redis adapter (best-effort)
+  await configureRedisAdapter(app);
 
   const register = client.register;
   app.getHttpAdapter().getInstance().get('/metrics', async (req: Request, res: Response) => {
