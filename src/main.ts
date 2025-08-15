@@ -7,6 +7,8 @@ import { Request, Response } from 'express';
 import * as Redis from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { INestApplication } from '@nestjs/common';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { join } from 'path';
 
 async function configureRedisAdapter(app: INestApplication) {
   try {
@@ -32,6 +34,18 @@ async function configureRedisAdapter(app: INestApplication) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+   app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.GRPC,
+    options: {
+      package: 'bookings',
+      protoPath: join(__dirname, 'proto/bookings.proto'),
+      url: '0.0.0.0:50051',
+    },
+  });
+
+  await app.startAllMicroservices();
+
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
     const config = new DocumentBuilder()
@@ -65,6 +79,8 @@ async function bootstrap() {
     },
   };
   SwaggerModule.setup('api/docs', app, document);
+
+
 
   // configure socket.io redis adapter (best-effort)
   await configureRedisAdapter(app);
